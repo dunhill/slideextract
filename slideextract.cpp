@@ -46,23 +46,20 @@ _se_mouseHandler(int event, int x, int y, int flags, void *param)
 	Mat clone;
 	Mat frame = *(Mat*)param;
 
-	if (event == EVENT_LBUTTONDOWN && (flags & EVENT_FLAG_LBUTTON)) {
+	if (event == EVENT_LBUTTONDOWN) {
 		point1 = Point (x, y);
 		point2 = Point (x, y);
 	}
 
-	if (!(flags & EVENT_FLAG_LBUTTON))
-		return;
+	if (flags & EVENT_FLAG_LBUTTON)
+	{
+		point2 = Point(x, y);
+		selected_roi = (point1.x != point2.x && point1.y != point2.y);
 
-	if (event != EVENT_MOUSEMOVE && event != EVENT_LBUTTONUP)
-		return;
-
-	point2 = Point(x, y);
-	selected_roi = (point1.x != point2.x && point1.y != point2.y);
-
-	clone = frame.clone();
-	rectangle(clone, point1, point2, CV_RGB(0, 255, 0), 1, 8, 0);
-	imshow("frame", clone);
+		clone = frame.clone();
+		rectangle(clone, point1, point2, CV_RGB(0, 255, 0), 1, 8, 0);
+		imshow("frame", clone);
+	}
 }
 
 int
